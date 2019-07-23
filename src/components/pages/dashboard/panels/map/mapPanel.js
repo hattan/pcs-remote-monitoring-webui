@@ -5,6 +5,8 @@ import update from 'immutability-helper';
 
 import Config from 'app.config';
 import { AjaxError, Indicator } from 'components/shared';
+import { HttpClient } from 'utilities/httpClient';
+
 import {
   Panel,
   PanelHeader,
@@ -24,6 +26,8 @@ const nominalDeviceLayer = 'devices-nominal-layer';
 const warningDevicesLayer = 'devices-warning-layer';
 const criticalDevicesLayer = 'devices-critical-layer';
 
+const ENDPOINT = Config.serviceUrls.iotHubManager;
+
 const deviceToMapPin = ({ id, properties, type }) =>
   new AzureMaps.data.Feature(
     new AzureMaps.data.Point([properties.Longitude, properties.Latitude]),
@@ -35,10 +39,11 @@ const deviceToMapPin = ({ id, properties, type }) =>
   );
 
 const deviceControlActions = {
-  START  : "start",
-  STOP   : "stop",
-  REBOOT : "reboot"
+  START  : 2,
+  STOP   : 8,
+  REBOOT : 10
 };
+
 
 export class MapPanel extends Component {
 
@@ -82,6 +87,18 @@ export class MapPanel extends Component {
 
   controlDevice(id,state){
     console.log(`send ${state} for device ${id}`)
+    let job = {
+          JobId: "test-714f2b7f-38a4-4922-9619-9480c08d18de",     
+          MaxExecutionTimeInSeconds: 0,    
+          Type: 5,     
+          QueryCondition: "2dc897d8-d6b7-402c-9011-d45ddf1f83ef",     
+          MethodParameter: {         
+            JsonPayload: `{"Action": ${state}}`     
+          } 
+    }
+    let json = JSON.stringify(job);
+
+    HttpClient.simplePost(`${ENDPOINT}jobs`,json);
   }
   
   getButtonColorClass(classname){

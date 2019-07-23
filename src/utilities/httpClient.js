@@ -25,6 +25,7 @@ export class HttpClient {
    * @param {string} url The url path to the make the request to
    */
   static post(url, body = {}, options = {}, withAuth = false) {
+    console.log("here");
     return HttpClient.ajax(url, { ...options, body, method: 'POST' }, withAuth);
   }
 
@@ -55,6 +56,21 @@ export class HttpClient {
     return HttpClient.ajax(url, { ...options, body, method: 'DELETE' }, withAuth);
   }
 
+  static simplePost(url,body = {}){
+    const bearerToken = Config.bearerToken;
+    window.fetch(url, {
+      method: 'POST', 
+      headers: {
+          'Content-Type': 'application/json',
+          'Csrf-Token': 'nocheck',
+          'Authorization': `Bearer ${bearerToken}`
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrer: 'no-referrer', // no-referrer, *client
+      body:body, // body data type must match "Content-Type" header
+  })
+  .then(response => response.json());
+  }
   /**
    * Constructs an Ajax request
    *
@@ -84,12 +100,12 @@ export class HttpClient {
    */
   static createAjaxRequest(options, withAuth) {
     const bearerToken = Config.bearerToken;
-    //todo revert back to original which handles withAuth
+    
     return (AuthService.getAccessToken())
       .map(token => ({ // Create the final headers options
         ...jsonHeaders,
         ...(options.headers || {}),
-        ...(authenticationHeaders(token))
+        ...(authenticationHeaders(bearerToken))
       }))
       .map(({ 'Content-Type': contentType, ...headers }) => {
         if (contentType) return { ...headers, 'Content-Type': contentType };
