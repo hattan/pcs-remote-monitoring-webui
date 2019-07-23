@@ -34,6 +34,12 @@ const deviceToMapPin = ({ id, properties, type }) =>
     }
   );
 
+const deviceControlActions = {
+  START  : "start",
+  STOP   : "stop",
+  REBOOT : "reboot"
+};
+
 export class MapPanel extends Component {
 
   constructor(props) {
@@ -74,6 +80,14 @@ export class MapPanel extends Component {
     this.calculatePins(this.props, true);
   }
 
+  controlDevice(id,state){
+    console.log(`send ${state} for device ${id}`)
+  }
+  
+  getButtonColorClass(classname){
+    return `device-control-btn-${classname}`;
+  }
+
   buildDevicePopup = (properties, classname) => {
     const popupContentBox = document.createElement('div');
     popupContentBox.classList.add('popup-content-box');
@@ -87,8 +101,42 @@ export class MapPanel extends Component {
     name.classList.add('popup-device-name');
     name.innerText = properties.id;
 
+    const startButton = document.createElement('button');
+    startButton.classList.add('device-control-btn');
+    startButton.classList.add(this.getButtonColorClass(classname));
+    startButton.innerText = "Start"
+    startButton.onclick =  (e) => {
+      e.preventDefault();
+      this.controlDevice(properties.id,deviceControlActions.START);
+    }
+
+    const stopButton = document.createElement('button');
+    stopButton.classList.add('device-control-btn');
+    stopButton.classList.add(this.getButtonColorClass(classname));
+    stopButton.innerText = "Stop"
+    stopButton.onclick =  (e) => {
+      e.preventDefault();
+      this.controlDevice(properties.id,deviceControlActions.STOP);
+    }
+
+    const rebootButton = document.createElement('button');
+    rebootButton.classList.add('device-control-btn');
+    rebootButton.classList.add(this.getButtonColorClass(classname));
+    rebootButton.innerText = "Reboot"
+    rebootButton.onclick = (e) => {
+      e.preventDefault();
+      this.controlDevice(properties.id,deviceControlActions.REBOOT);
+    }
+
+    const deviceControl = document.createElement('div');
+    deviceControl.classList.add('popup-device-control');
+    deviceControl.appendChild(startButton);
+    deviceControl.appendChild(stopButton);
+    deviceControl.appendChild(rebootButton);
+
     popupContentBox.appendChild(type);
     popupContentBox.appendChild(name);
+    popupContentBox.appendChild(deviceControl);
 
     popupContentBox.onclick = () => {
       // Check this to void any potential attempts to reference the component after unmount

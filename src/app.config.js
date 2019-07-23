@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 const baseUrl = process.env.REACT_APP_BASE_SERVICE_URL || '';
+const bearerToken = process.env.REACT_APP_BEARER_TOKEN || '';
 const validExtensions = ['.png', '.jpeg', '.jpg', '.svg'];
 
 const Config = {
@@ -69,7 +70,8 @@ const Config = {
   authenticationKey: {
     autoKey: 'Auto generate keys',
     manualKey: 'Enter keys manually'
-  }
+  },
+  bearerToken :`${bearerToken}`
 };
 
 export default Config;

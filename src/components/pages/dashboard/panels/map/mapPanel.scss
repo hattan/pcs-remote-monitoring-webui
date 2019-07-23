@@ -7,6 +7,31 @@ $zoomBtnPadding: 10px;
 $zoomBtnSize: 40px;
 $zoomBtnFont: 20px;
 
+.popup-device-control {
+  margin-top: 10px;
+    margin-bottom: 5px;
+}
+.device-control-btn{
+
+  border: none;
+  color: white;
+  text-align: center;
+  padding: 5px 22px;
+  margin-left: 8px;
+}
+.device-control-btn-alert{
+  background-color: #c24b3e;
+}
+.device-control-btn-nominal{
+  background-color: #3e6cc2;
+}
+.device-control-btn-warning{
+  color:black;
+  background-color: #FFD629;
+}
+
+
+
 .map-panel-container {
   display: flex;
   flex-flow: column nowrap;
